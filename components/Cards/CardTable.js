@@ -11,7 +11,7 @@ export default function CardTable({ color }) {
       <div
         className={
           "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
-          (color === "light" ? "bg-white" : "bg-blueGray-700 text-white")
+          (color === "light" ? "bg-white" : "bg-lightBlue-500 text-white")
         }
       >
         <div className="rounded-t mb-0 px-4 py-3 border-0">
