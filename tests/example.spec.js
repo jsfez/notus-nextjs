@@ -2,26 +2,30 @@
 import { test } from "@playwright/test";
 import { argosScreenshot } from "@argos-ci/playwright";
 
-test("Screenshot home", async ({ page }) => {
-  const url = "/";
-  await page.goto(url);
-  await argosScreenshot(page, "homepage");
-});
+const baseUrl = "http://localhost:3000";
 
-test("Screenshot profile", async ({ page, browserName }) => {
-  const url = "profile";
-  await page.goto(url);
-  await argosScreenshot(page, `profile-${browserName}`);
-});
+const pages = [
+  { name: "home", url: "/" },
+  { name: "profile", url: "/profile" },
+  { name: "login", url: "/auth/login" },
+  { name: "register", url: "/auth/register" },
+];
 
-test("Screenshot login", async ({ page, browserName }) => {
-  const url = "login";
-  await page.goto(url);
-  await argosScreenshot(page, `login-${browserName}`);
-});
+for (const page of pages) {
+  test(`Screenshot ${page.name}`, async ({ page: browserPage }) => {
+    const url = new URL(page.url, baseUrl).toString();
+    await browserPage.goto(url);
+    await argosScreenshot(browserPage, page.name);
+  });
+}
 
-test("Screenshot register", async ({ page, browserName }) => {
-  const url = "register";
-  await page.goto(url);
-  await argosScreenshot(page, `register-${browserName}`);
+test.describe("specific mobile viewport", () => {
+  test.use({ viewport: { width: 390, height: 664 } });
+
+  test(`Screenshot register`, async ({ page: browserPage }) => {
+    const page = pages[3];
+    const url = new URL(page.url, baseUrl).toString();
+    await browserPage.goto(url);
+    await argosScreenshot(browserPage, `${page.name} - mobile`);
+  });
 });
